@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "description": "MyTelegrafBackend",
   "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
   "author": {
     "name": ""
   },
