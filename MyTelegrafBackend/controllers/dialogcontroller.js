@@ -1,20 +1,41 @@
 const { Dialog } = require('../models/models')
-const ApieError = require('../error/apiError')
+const ApiError = require('../error/apiError')
 
 class DialogController {
-    async create(req, res) {
-        const { name, creator } = req.body
-        const dialog = await Dialog.create({ name, creator })
-        return res.json(dialog)
+
+    async create(req, res, next) {
+        try {
+            const dialog = await Dialog.create({ name: req.body.name, userId: req.user.id })
+            return res.json(dialog)
+        } catch (e) {
+            return next(ApiError.badRequest('Bad Create :D'))
+        }
     }
 
-    async delete(req, res) {
-
+    async delete(req, res, next) {
+        try {
+            const { id } = req.body
+            if (!id) {
+                return next(ApiError.badRequest('Не передан id диалога'))
+            }
+            const existDialog = await Dialog.findOne({ where: { id } })
+            if (req.user.role == "Admin" || existDialog.userId == req.user.id) {
+                const dialog = await existDialog.destroy()
+                return res.json(dialog)
+            }
+            
+        } catch (e) {
+            return next(ApiError.badRequest('Bad Delete :D'))
+        }
     }
 
-    async getAll(req, res) {
-        const dialogs = await Dialog.findAll()
-        return res.json(dialogs)
+    async getAll(req, res, next) {
+        try {
+            const dialogs = await Dialog.findAll({ where: { userId: req.user.id } })
+            return res.json(dialogs)
+        } catch (e) {
+            return next(ApiError.badRequest('Bad getAll :D'))
+        }
     }
 }
 

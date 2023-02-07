@@ -19,7 +19,7 @@ const Dialog = sequelize.define('dialog', {
 const Message = sequelize.define('message', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     message: { type: DataTypes.STRING, allowNull: false },
-    date: { type: DataTypes.TIME, allowNull: false }
+    date: { type: DataTypes.DATE, allowNull: false, defaultValue: DataTypes.NOW }
 })
 
 const UserDialog = sequelize.define('user_dialog', {
@@ -35,6 +35,9 @@ Dialog.hasOne(User)
 
 Dialog.hasMany(Message)
 Message.belongsTo(Dialog)
+
+User.hasMany(Message)
+Message.hasOne(User)
 
 UserDialog.belongsTo(Message)
 Message.hasOne(UserDialog)
