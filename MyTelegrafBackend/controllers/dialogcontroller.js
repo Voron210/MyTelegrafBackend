@@ -19,9 +19,14 @@ class DialogController {
                 return next(ApiError.badRequest('Не передан id диалога'))
             }
             const existDialog = await Dialog.findOne({ where: { id } })
+            if (!existDialog) {
+                return next(ApiError.badRequest('Dialog with the given id does not exist'))
+            }
             if (req.user.role == "Admin" || existDialog.userId == req.user.id) {
                 const dialog = await existDialog.destroy()
                 return res.json(dialog)
+            } else {
+                return next(ApiError.forbidden('You do not have the permissions to delete this dialog'))
             }
             
         } catch (e) {

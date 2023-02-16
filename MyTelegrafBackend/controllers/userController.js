@@ -15,15 +15,15 @@ class UserController {
     async registrarion(req, res, next) {
         const { email, password, role, nickname } = req.body
         if (!email || !password || !nickname) {
-            return next(ApiError.badRequest('emailpassnickerr'))
+            return next(ApiError.badRequest('Missing required fields'))
         }
         const existEmail = await User.findOne({ where: { email } })
         const existNick = await User.findOne({ where: { nickname } })
         if (existEmail) {
-            return next(ApiError.badRequest('exist email'))
+            return next(ApiError.badRequest('Email already exists'))
         }
         if (existNick) {
-            return next(ApiError.badRequest('exist nickname'))
+            return next(ApiError.badRequest('Nickname already exists'))
         }
         const hashPassword = await bcrypt.hash(password,5)
         const user = await User.create({ email, role, password: hashPassword,nickname})
@@ -37,9 +37,9 @@ class UserController {
         if (!user) {
             return next(ApiError.badRequest('User not found'))
         }
-        let comparePassword = bcrypt.compareSync(password, user.password)
+        let comparePassword = bcrypt.compare(password, user.password)
         if (!comparePassword) {
-            return next(ApiError.badRequest('Wrong password'))
+            return next(ApiError.badRequest('Incorrect password'))
         }
         const token = generateJwt(user.id, user.email, user.role, user.nickname)
         return res.json({token})
