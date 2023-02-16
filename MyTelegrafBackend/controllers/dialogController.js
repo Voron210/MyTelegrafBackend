@@ -16,7 +16,7 @@ class DialogController {
         try {
             const { id } = req.body
             if (!id) {
-                return next(ApiError.badRequest('Не передан id диалога'))
+                return next(ApiError.badRequest('ГЌГҐ ГЇГҐГ°ГҐГ¤Г Г­ id Г¤ГЁГ Г«Г®ГЈГ '))
             }
             const existDialog = await Dialog.findOne({ where: { id } })
             if (!existDialog) {
