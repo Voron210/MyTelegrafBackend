@@ -32,6 +32,7 @@
   <ItemGroup>
     <Content Include="controllers\dialogController.js" />
     <Content Include="controllers\messageController.js" />
+    <Content Include="controllers\newsController.js" />
     <Content Include="controllers\userController.js" />
     <Content Include="db.js" />
     <Content Include="error\apiError.js" />
@@ -41,17 +42,21 @@
     <Content Include="routes\dialogRouter.js" />
     <Content Include="routes\index.js" />
     <Content Include="routes\messageRouter.js" />
+    <Content Include="routes\newsRouter.js" />
     <Content Include="routes\userRouter.js" />
     <Content Include="server.js" />
     <Content Include="package.json" />
     <Content Include="README.md" />
     <Content Include=".env" />
+    <Content Include="wsController.js" />
+    <Content Include="wsControll\wsMessageControll.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="controllers\" />
     <Folder Include="error\" />
     <Folder Include="middleware\" />
+    <Folder Include="wsControll\" />
     <Folder Include="routes\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

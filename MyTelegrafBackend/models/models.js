@@ -26,6 +26,12 @@ const UserDialog = sequelize.define('user_dialog', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
 })
 
+const News = sequelize.define('news', {
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    name: { type: DataTypes.STRING, allowNull: false },
+    content: { type: DataTypes.STRING, allowNull: false }
+})
+
 
 User.belongsToMany(Dialog, { through: UserDialog })
 Dialog.belongsToMany(User, { through: UserDialog })
@@ -37,7 +43,8 @@ Dialog.hasMany(Message)
 Message.belongsTo(Dialog)
 
 User.hasMany(Message)
-Message.hasOne(User)
+Message.belongsTo(User, { as: 'user' })
+//Message.hasOne(User)
 
 UserDialog.belongsTo(Message)
 Message.hasOne(UserDialog)
@@ -46,5 +53,6 @@ module.exports = {
     User,
     Dialog,
     Message,
-    UserDialog
+    UserDialog,
+    News
 }

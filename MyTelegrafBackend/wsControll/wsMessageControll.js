@@ -1,13 +1,13 @@
 const ApiError = require('../error/apiError')
-const { Message, User } = require('../models/models')
+const { Message } = require('../models/models')
 
 class MessageController {
-    async create(req, res, next) {
+    async create(req) {
         try {
-            const message = await Message.create({ message: req.body.message, userId: req.user.id, dialogId: req.body.dialog })
-            return res.json(message)
+            const message = await Message.create({ message: req.message, userId: req.userId, dialogId: req.dialogId })
+            return message
         } catch (e) {
-            return next(ApiError.badRequest('Bad Create :D'))
+            //return status(400).json({ error: 'Bad Request' });
         }
     }
 
@@ -30,14 +30,7 @@ class MessageController {
 
     async getAll(req, res, next) {
         try {
-            //const message = await User.findAll({})
-            const message = await Message.findAll({
-                where: { dialogId: req.body.dialogId },
-                include: [{
-                    model: User,
-                    as: 'user'
-                }]
-            })
+            const message = await Message.findAll({ where: { userId: req.user.id, dialogId: req.body.dialogId } })
             return res.json(message)
         } catch (e) {
             return next(ApiError.badRequest('Bad getAll :D'))

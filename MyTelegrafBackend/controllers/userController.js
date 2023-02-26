@@ -47,7 +47,18 @@ class UserController {
 
     async check(req, res, next) {
         const token = generateJwt(req.user.id, req.user.email, req.user.role, req.user.nickname)
-        return res.json({token})
+        return res.json({ token }  )
+    }
+
+    async getAll(req, res, next) {
+        try {
+            const users = await User.findAll({
+                attributes: ['id', 'nickname']
+            })
+            return res.json(users)
+        } catch (e) {
+            return next(ApiError.badRequest('Bad getAll :D'))
+        }
     }
 }
 

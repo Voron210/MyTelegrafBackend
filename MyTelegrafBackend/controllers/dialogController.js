@@ -1,11 +1,13 @@
-const { Dialog } = require('../models/models')
+const { Dialog, UserDialog, User } = require('../models/models')
 const ApiError = require('../error/apiError')
+
 
 class DialogController {
 
     async create(req, res, next) {
         try {
             const dialog = await Dialog.create({ name: req.body.name, userId: req.user.id })
+            await UserDialog.create({ userId: req.user.id, dialogId: dialog.id })
             return res.json(dialog)
         } catch (e) {
             return next(ApiError.badRequest('Bad Create :D'))
@@ -16,7 +18,7 @@ class DialogController {
         try {
             const { id } = req.body
             if (!id) {
-                return next(ApiError.badRequest('Íå ïåðåäàí id äèàëîãà'))
+                return next(ApiError.badRequest('Dialog not found'))
             }
             const existDialog = await Dialog.findOne({ where: { id } })
             if (!existDialog) {
@@ -36,7 +38,13 @@ class DialogController {
 
     async getAll(req, res, next) {
         try {
-            const dialogs = await Dialog.findAll({ where: { userId: req.user.id } })
+            const dialogs = await Dialog.findAll({
+               // where: { userId: req.user.id },
+                include: [{
+                    model: User,
+                    where: { id: req.user.id }
+                }]
+            })
             return res.json(dialogs)
         } catch (e) {
             return next(ApiError.badRequest('Bad getAll :D'))
